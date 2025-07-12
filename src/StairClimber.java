@@ -17,7 +17,6 @@ $ java StairClimber 3
  */
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class StairClimber
@@ -34,8 +33,6 @@ public class StairClimber
 
     public void climb()
     {
-        // input is valid from main
-        // System.out.println("I got: " + this.STAIRS + " stairs");
         ArrayList<Integer> initSteps = new ArrayList<>();
         climb(STAIRS, initSteps);
     }
@@ -51,23 +48,23 @@ public class StairClimber
 
         if (stairs >= 1)
         {
-            steps.add(1);
-            climb(stairs - 1, steps );
-            steps.removeLast();
+            ArrayList<Integer> stepsResult = new ArrayList<>(steps);
+            stepsResult.add(1);
+            climb(stairs - 1, stepsResult );
         }
 
         if (stairs >= 2)
         {
-            steps.add(2);
-            climb(stairs - 1, steps );
-            steps.removeLast();
+            ArrayList<Integer> stepsResult = new ArrayList<>(steps);
+            stepsResult.add(2);
+            climb(stairs - 2, stepsResult );
         }
 
         if (stairs >= 3)
         {
-            steps.add(3);
-            climb(stairs - 1, steps );
-            steps.removeLast();
+            ArrayList<Integer> stepsResult = new ArrayList<>(steps);
+            stepsResult.add(3);
+            climb(stairs - 3, stepsResult );
         }
     }
 
@@ -86,39 +83,13 @@ public class StairClimber
             List<Integer> steps = opts.get(idx);
             // "%Nd" means an integer right-aligned in a field of width N
             System.out.printf(
-                    "%" + maxIndexWidth + "d. %s%n%n",
+                    "%" + maxIndexWidth + "d. %s%n",
                     idx + 1,
                     steps
             );
         }
     }
 
-    private void ArrayToString(ArrayList<int[]> steps, StringBuilder output)
-    {
-        int i = 0;
-        while (i < steps.size())
-        {
-            output.append(Arrays.toString(steps.get(i++)));
-//            if (steps.get(i))
-//            {
-//            } else
-//            {
-//                break;
-//            }
-        }
-    }
-
-    private static void arrayToOutput(char[] current, StringBuilder output)
-    {
-        int i = 0;
-        while (i < current.length) {
-            if (current[i] != 0) {
-                output.append(current[i++]);
-            } else {
-                break;
-            }
-        }
-    }
 
 
     public static void main(String[] args)
