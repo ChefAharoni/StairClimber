@@ -21,15 +21,18 @@ public class StairClimber
 {
     private final int STAIRS;
     private int solCounter;
+    private final int[] memoOptimizer;
 
     public StairClimber(int stairs)
     {
         this.STAIRS = stairs;
-//        this.nWays = 0;
+        this.memoOptimizer = new int[stairs + 1];
     }
 
     private int countWays(int stairs)
     {
+        // Optimized by storing the results that were already computed
+        // so that no work is repeated in this recursive function
 
         if (stairs == 0)
         {
@@ -40,9 +43,17 @@ public class StairClimber
             return 0;
         }
 
-        return countWays(stairs - 1 ) +
+        // return the cached (already computed) result if it exists (computed)
+        if (memoOptimizer[stairs] != 0)
+        {
+            return memoOptimizer[stairs];
+        }
+
+        this.memoOptimizer[stairs] = countWays(stairs - 1 ) +
                 countWays(stairs - 2 ) +
                 countWays(stairs - 3);
+
+        return  this.memoOptimizer[stairs];
     }
 
     public void climb()
@@ -67,17 +78,21 @@ public class StairClimber
         climb(STAIRS, buffer, 0, maxIndexWidth);
     }
 
-    private void printPath(int[] path, int len) {
-        System.out.print("[");
-        for (int i = 0; i < len; i++)
-        {
-            System.out.print(path[i]);
-            if (i < len - 1)
-            {
-                System.out.print(", ");
+    private void printPath(int[] path, int len)
+    {
+        // Optimization: build a string instead of calling print several times
+        StringBuilder sb = new StringBuilder();
+        sb.append("["); // opening bracket for style
+
+        for (int i = 0; i < len; i++) {
+            sb.append(path[i]);
+            if (i < len - 1) {
+                sb.append(", ");
             }
         }
-        System.out.print("]\n");
+        sb.append("]"); // closing bracket for style
+
+        System.out.println(sb);
     }
 
 
@@ -91,7 +106,6 @@ public class StairClimber
 
         if (stairs == 0)
         {
-//            solCounter++;
             System.out.printf("%" + width + "d. ", ++solCounter);
             printPath(buf, len);
             return;
@@ -115,10 +129,6 @@ public class StairClimber
             climb(stairs - 3, buf, len+1, width);
         }
     }
-
-
-
-
 
     public static void main(String[] args)
     {
@@ -150,3 +160,9 @@ public class StairClimber
         System.exit(0);
     }
 }
+
+// Chat: Please explain to me (without giving the solution), why does my list
+//      keeps changing after clearing it?
+// Chat: Is there an alternative for using ArrayList?
+// Chat: How to improve the recursive call for counting solutions if it's
+//        repeating work?
