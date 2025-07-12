@@ -42,29 +42,39 @@ public class StairClimber
         if (stairs == 0)
         {
             nWays++;
-            opts.add(steps);
+//            opts.add(steps);
+            opts.add(new ArrayList<>(steps));
             return;
         }
 
         if (stairs >= 1)
         {
-            ArrayList<Integer> stepsResult = new ArrayList<>(steps);
-            stepsResult.add(1);
-            climb(stairs - 1, stepsResult );
+//            ArrayList<Integer> stepsResult = new ArrayList<>(steps);
+//            stepsResult.add(1);
+//            climb(stairs - 1, stepsResult );
+            steps.add(1);
+            climb(stairs - 1, steps);
+            steps.remove(steps.size() - 1);  // pop
         }
 
         if (stairs >= 2)
         {
-            ArrayList<Integer> stepsResult = new ArrayList<>(steps);
-            stepsResult.add(2);
-            climb(stairs - 2, stepsResult );
+//            ArrayList<Integer> stepsResult = new ArrayList<>(steps);
+//            stepsResult.add(2);
+//            climb(stairs - 2, stepsResult );
+            steps.add(2);
+            climb(stairs - 2, steps);
+            steps.remove(steps.size() - 1);  // pop
         }
 
         if (stairs >= 3)
         {
-            ArrayList<Integer> stepsResult = new ArrayList<>(steps);
-            stepsResult.add(3);
-            climb(stairs - 3, stepsResult );
+//            ArrayList<Integer> stepsResult = new ArrayList<>(steps);
+//            stepsResult.add(3);
+//            climb(stairs - 3, stepsResult );
+            steps.add(3);
+            climb(stairs - 3, steps);
+            steps.remove(steps.size() - 1);  // pop
         }
     }
 
