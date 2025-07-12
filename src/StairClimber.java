@@ -16,34 +16,76 @@ $ java StairClimber 3
 4. [3]
  */
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class StairClimber
 {
     private final int STAIRS;
-    private int nWays;
-    private final List<int[]> opts; // options
+    private int solCounter;
 
     public StairClimber(int stairs)
     {
         this.STAIRS = stairs;
-        this.opts = new ArrayList<>();
+//        this.nWays = 0;
+    }
+
+    private int countWays(int stairs)
+    {
+
+        if (stairs == 0)
+        {
+            return 1;
+        }
+
+        if (stairs < 0) {
+            return 0;
+        }
+
+        return countWays(stairs - 1 ) +
+                countWays(stairs - 2 ) +
+                countWays(stairs - 3);
     }
 
     public void climb()
     {
-        int[] buffer = new int[STAIRS];
-        climb(STAIRS, buffer, 0);
+        int totalWays = countWays(STAIRS);
+        printSolutions(totalWays);
+    }
+
+    public void printSolutions(int totalWays)
+    {
+        System.out.println(totalWays
+                + (totalWays > 1 ? " ways" : " way")
+                + " to climb "
+                + STAIRS
+                + (STAIRS > 1 ? " stairs." : " stair.")
+        );
+
+        // determine how much space we need for right-aligning the index
+        // calculated from the total amount of ways
+        int maxIndexWidth = String.valueOf(totalWays).length();
+        int[] buffer = new int[STAIRS]; // Max possible path length
+        climb(STAIRS, buffer, 0, maxIndexWidth);
+    }
+
+    private void printPath(int[] path, int len) {
+        System.out.print("[");
+        for (int i = 0; i < len; i++)
+        {
+            System.out.print(path[i]);
+            if (i < len - 1)
+            {
+                System.out.print(", ");
+            }
+        }
+        System.out.print("]\n");
     }
 
 
-    private void climb(int stairs, int[] buf, int len)
+    private void climb(int stairs, int[] buf, int len, int width)
     {
-        // Worked with my father on the solution
-        // he now officially hates Java and says this is a kids' language
-        // it was much more fun in C where we could do everything
+        // Worked with my father on this solution
 
         // This optimization uses buffers instead of ArrayLists
         // This saves all the ArrayList operations that are very costly
@@ -51,52 +93,32 @@ public class StairClimber
 
         if (stairs == 0)
         {
-            nWays++;
-            opts.add(Arrays.copyOf(buf, len));
+//            solCounter++;
+            System.out.printf("%" + width + "d. ", ++solCounter);
+            printPath(buf, len);
             return;
         }
 
         if (stairs >= 1)
         {
             buf[len] = 1;
-            climb(stairs - 1, buf, len+1);
+            climb(stairs - 1, buf, len+1, width);
         }
 
         if (stairs >= 2)
         {
             buf[len] = 2;
-            climb(stairs -2, buf, len+1);
+            climb(stairs -2, buf, len+1, width);
         }
 
         if (stairs >= 3)
         {
             buf[len] = 3;
-            climb(stairs - 3, buf, len+1);
+            climb(stairs - 3, buf, len+1, width);
         }
     }
 
-    public void printSolutions() {
-        System.out.println(nWays
-                + (nWays > 1 ? " ways" : " way")
-                + " to climb "
-                + STAIRS
-                + (STAIRS > 1 ? " stairs." : " stair.")
-        );
 
-        // determine how much space we need for right-aligning the index
-        int maxIndexWidth = String.valueOf(opts.size()).length();
-
-        for (int idx = 0; idx < opts.size(); idx++) {
-            int[] steps = opts.get(idx);
-
-            // "%Nd" means an integer right-aligned in a field of width N
-            System.out.printf(
-                    "%" + maxIndexWidth + "d. %s%n",
-                    idx + 1,
-                    Arrays.toString(steps)
-            );
-        }
-    }
 
 
 
@@ -126,7 +148,6 @@ public class StairClimber
 
         StairClimber climber = new StairClimber(stairs);
         climber.climb();
-        climber.printSolutions();
 
         System.exit(0);
     }
