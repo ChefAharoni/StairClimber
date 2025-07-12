@@ -16,8 +16,6 @@ $ java StairClimber 3
 4. [3]
  */
 
-import java.util.Arrays;
-import java.util.List;
 
 public class StairClimber
 {
