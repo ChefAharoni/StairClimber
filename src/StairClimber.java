@@ -17,13 +17,14 @@ $ java StairClimber 3
  */
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StairClimber
 {
     private final int STAIRS;
     private int nWays;
-    private final List<ArrayList<Integer>> opts; // options
+    private final List<int[]> opts; // options
 
     public StairClimber(int stairs)
     {
@@ -33,38 +34,44 @@ public class StairClimber
 
     public void climb()
     {
-        ArrayList<Integer> initSteps = new ArrayList<>();
-        climb(STAIRS, initSteps);
+        int[] buffer = new int[STAIRS];
+        climb(STAIRS, buffer, 0);
     }
 
-    private void climb(int stairs, ArrayList<Integer> steps)
+
+    private void climb(int stairs, int[] buf, int len)
     {
+        // Worked with my father on the solution
+        // he now officially hates Java and says this is a kids' language
+        // it was much more fun in C where we could do everything
+
+        // This optimization uses buffers instead of ArrayLists
+        // This saves all the ArrayList operations that are very costly
+        // These ArrayList operations were pointed out by JProfile
+
         if (stairs == 0)
         {
             nWays++;
-            opts.add(steps);
+            opts.add(Arrays.copyOf(buf, len));
             return;
         }
 
         if (stairs >= 1)
         {
-            ArrayList<Integer> stepsResult = new ArrayList<>(steps);
-            stepsResult.add(1);
-            climb(stairs - 1, stepsResult );
+            buf[len] = 1;
+            climb(stairs - 1, buf, len+1);
         }
 
         if (stairs >= 2)
         {
-            ArrayList<Integer> stepsResult = new ArrayList<>(steps);
-            stepsResult.add(2);
-            climb(stairs - 2, stepsResult );
+            buf[len] = 2;
+            climb(stairs -2, buf, len+1);
         }
 
         if (stairs >= 3)
         {
-            ArrayList<Integer> stepsResult = new ArrayList<>(steps);
-            stepsResult.add(3);
-            climb(stairs - 3, stepsResult );
+            buf[len] = 3;
+            climb(stairs - 3, buf, len+1);
         }
     }
 
@@ -80,12 +87,13 @@ public class StairClimber
         int maxIndexWidth = String.valueOf(opts.size()).length();
 
         for (int idx = 0; idx < opts.size(); idx++) {
-            List<Integer> steps = opts.get(idx);
+            int[] steps = opts.get(idx);
+
             // "%Nd" means an integer right-aligned in a field of width N
             System.out.printf(
                     "%" + maxIndexWidth + "d. %s%n",
                     idx + 1,
-                    steps
+                    Arrays.toString(steps)
             );
         }
     }
